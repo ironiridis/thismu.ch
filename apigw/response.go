@@ -1,6 +1,10 @@
 package apigw
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+	"html/template"
+)
 
 type Response struct {
 	Status        int               `json:"statusCode"`
@@ -10,13 +14,11 @@ type Response struct {
 	Body          string            `json:"body"`
 }
 
-func NewResponse(contentType string) *Response {
+func NewResponse() *Response {
 	return &Response{
 		Cookies: []string{},
 		Status:  200,
-		Headers: map[string]string{
-			"content-type": contentType,
-		},
+		Headers: map[string]string{},
 	}
 }
 
@@ -31,4 +33,21 @@ func (o *Response) Write(p []byte) (n int, err error) {
 	o.Body += string(p)
 	n = len(p)
 	return
+}
+
+func (o *Response) BodyJSON(status int, d interface{}) error {
+	buf, err := json.Marshal(d)
+	if err != nil {
+		return err
+	}
+	o.Status = status
+	o.Body = string(buf)
+	o.Headers["content-type"] = "application/json"
+	return nil
+}
+
+func (o *Response) BodyHTML(status int, t *template.Template, d interface{}) error {
+	o.Status = status
+	o.Headers["content-type"] = "text/html"
+	return t.Execute(o, d)
 }

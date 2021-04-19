@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"embed"
-	"fmt"
 	"html/template"
 
 	"github.com/aws/aws-lambda-go/lambda"
@@ -13,14 +12,11 @@ import (
 //go:embed *.html
 var embededFS embed.FS
 
+var templateShell = template.Must(template.ParseFS(embededFS, "shell.html"))
+
 func HandleRequest(ctx context.Context, r *apigw.HTTPReq) (*apigw.Response, error) {
-	var err error
-	out := apigw.NewResponse("text/html")
-	t, err := template.ParseFS(embededFS, "shell.html")
-	if err != nil {
-		return out.InternalError(err)
-	}
-	err = t.Execute(out, fmt.Sprintf("%#v", *r))
+	out := apigw.NewResponse()
+	err := out.BodyHTML(200, templateShell, r)
 	if err != nil {
 		return out.InternalError(err)
 	}

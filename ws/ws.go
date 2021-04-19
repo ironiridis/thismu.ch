@@ -2,18 +2,18 @@ package main
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/ironiridis/thismu.ch/apigw"
 )
 
-type req map[string]interface{}
-
-func HandleRequest(ctx context.Context, r req) (*apigw.Response, error) {
-	out := apigw.NewResponse("application/json")
-	out.Body = fmt.Sprintf(`{"msg":"Hello via ws","r":%q}`, r)
-	return out, nil
+func HandleRequest(ctx context.Context, r apigw.WSReq) (*apigw.Response, error) {
+	out := apigw.NewResponse()
+	err := out.BodyJSON(200, r)
+	if err != nil {
+		return out.InternalError(err)
+	}
+	return out, err
 }
 
 func main() {
