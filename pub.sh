@@ -1,20 +1,16 @@
 #!/bin/bash
 set -euo pipefail
 
-handler=main
-funcName=thismuchDefault
-
 go mod tidy
 
-# use -w -s to strip symbol info for smaller binaries
-go build -ldflags='-w -s' -o $handler
+go build -ldflags='-w -s' -o http/http ./http/
+go build -ldflags='-w -s' -o ws/ws ./ws/
 
-if advzip -a3 $handler.zip $handler ; then
-	true # nice, advzip worked
-else
-	echo "Consider installing advzip, part of advancecomp, for smaller zips"
-	zip -9 $handler.zip $handler
-fi
+zip -qjm9 http.zip http/http
+zip -qjm9 ws.zip ws/ws
 
-aws lambda update-function-code --function-name "$funcName" --zip-file "fileb://$handler.zip" --publish
-rm $handler.zip
+aws lambda update-function-code --function-name "thismuchHTTP" --zip-file "fileb://http.zip" --publish
+aws lambda update-function-code --function-name "thismuchWS" --zip-file "fileb://ws.zip" --publish
+
+rm -f http.zip ws.zip
+
