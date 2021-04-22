@@ -3,14 +3,18 @@ set -euo pipefail
 
 go mod tidy
 
-go build -ldflags='-w -s' -o http/http ./http/
-go build -ldflags='-w -s' -o ws/ws ./ws/
+deployLambda () {
+    if [ ! -e $1.zip ] || [ $(find $1/ -type f -newer $1.zip | wc -l) -gt 0 ]
+    then
+        echo rebuilding and uploading $1 to $2
+        go build -ldflags='-w -s' -o $1/$1 ./$1/
+        zip -qjm9 $1.zip $1/$1
+        aws lambda update-function-code --function-name "$2" --zip-file "fileb://$1.zip" --publish
+    else
+        echo zip file seems up-to-date. rm $1.zip to force.
+    fi
+}
 
-zip -qjm9 http.zip http/http
-zip -qjm9 ws.zip ws/ws
-
-aws lambda update-function-code --function-name "thismuchHTTP" --zip-file "fileb://http.zip" --publish
-aws lambda update-function-code --function-name "thismuchWS" --zip-file "fileb://ws.zip" --publish
-
-rm -f http.zip ws.zip
-
+deployLambda http thismuchHTTP
+deployLambda ws thismuchWS
+aws s3 sync static/ s3://static.thismu.ch/
