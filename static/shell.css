@@ -1,0 +1,18 @@
+/* sticky footer shamelessly ripped off from https://css-tricks.com/couple-takes-sticky-footer/ */ 
+html {
+    height: 100%;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Tahoma, Arial, sans-serif;
+}
+body {
+    min-height: 100%;
+    display: grid;
+    grid-template-rows: 1fr auto;
+}
+body > footer {
+    grid-row-start: 2;
+    grid-row-end: 3;
+}
+footer > a {
+    display: block;
+    text-align: right;
+}
