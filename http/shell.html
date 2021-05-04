@@ -1,17 +1,21 @@
 <html>
 <head>
 <title>thismu.ch collaborative estimation</title>
-<link href="//static.thismu.ch/shell.css" rel="stylesheet">
+<link href="https://static.thismu.ch/shell.css" rel="stylesheet">
+<script src="https://unpkg.com/vue@3.0.11"></script>
+<script src="https://static.thismu.ch/thismuch.js"></script>
+<script src="https://static.thismu.ch/vue.js"></script>
+<script src="https://static.thismu.ch/ws.js"></script>
 </head>
 <body>
-<header><h1>thismu.ch</h1></header>
-<div id="v"></div>
-<footer><a href="https://chris.harrington.mn/">chris.harrington.mn</a></footer>
-<script src="https://unpkg.com/vue@3.0.11"></script>
-<script src="https://static.thismu.ch/vue.js"></script>
-<script>
-app.mount('#v');
-</script>
-<script src="https://static.thismu.ch/ws.js"></script>
+<header><h1>thismu.ch - collaborative estimation</h1></header>
+<div id="v">
+    <ui-container :chan="chan" :user="user" :ui="ui">
+        Ideally this text wouldn't be here long enough for you to read it.<br>
+        If it's stuck like this, it could be your internet connection. Check on that.<br>
+        I would offer to help, but honestly I'm just some placeholder text. Good luck!
+    </ui-container>
+</div>
+<footer>Regrettably created in 2021 by <a href="https://chris.harrington.mn/">chris.harrington.mn</a></footer>
 </body>
 </html>

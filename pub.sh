@@ -11,7 +11,7 @@ deployLambda () {
         zip -qjm9 $1.zip $1/$1
         aws lambda update-function-code --function-name "$2" --zip-file "fileb://$1.zip" --publish
     else
-        echo zip file seems up-to-date. rm $1.zip to force.
+        echo $1 zip file seems up-to-date. rm $1.zip to force.
     fi
 }
 

@@ -13,7 +13,7 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
-main.zip
-main
+dev/
+static/dev-shell.html
 http.zip
 ws.zip
